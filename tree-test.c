@@ -5,7 +5,7 @@ void preOrder(struct Node *root)
 {
     if(root != NULL)
     {
-        printf("%d ", root->key);
+        printf("%d ", root->size);
         preOrder(root->left);
         preOrder(root->right);
     }

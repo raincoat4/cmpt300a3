@@ -4,7 +4,20 @@
 #include "avltree.h"
 // An AVL tree node 
 
-  
+int getEnd(struct Node *N)
+{
+    return (N->size)+(N->start);
+}
+
+int getStart(struct Node *N)
+{
+    return N->start;
+}
+
+int getSize(struct Node *N)
+{
+    return N->size;
+}
 // A utility function to get the height of the tree 
 int height(struct Node *N) 
 { 
@@ -19,13 +32,13 @@ int max(int a, int b)
     return (a > b)? a : b; 
 } 
   
-/* Helper function that allocates a new node with the given key and 
+/* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
-struct Node* newNode(int key) 
+struct Node* newNode(int size) 
 { 
     struct Node* node = (struct Node*) 
                         malloc(sizeof(struct Node)); 
-    node->key   = key; 
+    node->size   = size; 
     node->left   = NULL; 
     node->right  = NULL; 
     node->height = 1;  // new node is initially added at leaf 
@@ -82,19 +95,19 @@ int getBalance(struct Node *N)
     return height(N->left) - height(N->right); 
 } 
   
-// Recursive function to insert a key in the subtree rooted 
+// Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
-struct Node* insert(struct Node* node, int key) 
+struct Node* insert(struct Node* node, int size) 
 { 
     /* 1.  Perform the normal BST insertion */
     if (node == NULL) 
-        return(newNode(key)); 
+        return(newNode(size)); 
   
-    if (key < node->key) 
-        node->left  = insert(node->left, key); 
-    else if (key > node->key) 
-        node->right = insert(node->right, key); 
-    else // Equal keys are not allowed in BST 
+    if (size < node->size) 
+        node->left  = insert(node->left, size); 
+    else if (size > node->size) 
+        node->right = insert(node->right, size); 
+    else // Equal sizes are not allowed in BST 
         return node; 
   
     /* 2. Update height of this ancestor node */
@@ -110,22 +123,22 @@ struct Node* insert(struct Node* node, int key)
     // there are 4 cases 
   
     // Left Left Case 
-    if (balance > 1 && key < node->left->key) 
+    if (balance > 1 && size < node->left->size) 
         return rightRotate(node); 
   
     // Right Right Case 
-    if (balance < -1 && key > node->right->key) 
+    if (balance < -1 && size > node->right->size) 
         return leftRotate(node); 
   
     // Left Right Case 
-    if (balance > 1 && key > node->left->key) 
+    if (balance > 1 && size > node->left->size) 
     { 
         node->left =  leftRotate(node->left); 
         return rightRotate(node); 
     } 
   
     // Right Left Case 
-    if (balance < -1 && key < node->right->key) 
+    if (balance < -1 && size < node->right->size) 
     { 
         node->right = rightRotate(node->right); 
         return leftRotate(node); 
@@ -145,27 +158,27 @@ struct Node * minValueNode(struct Node* node)
     return current;
 }
  
-// Recursive function to delete a node with given key
+// Recursive function to delete a node with given size
 // from subtree with given root. It returns root of
 // the modified subtree.
-struct Node* deleteNode(struct Node* root, int key)
+struct Node* deleteNode(struct Node* root, int size)
 {
     // STEP 1: PERFORM STANDARD BST DELETE
  
     if (root == NULL)
         return root;
  
-    // If the key to be deleted is smaller than the
-    // root's key, then it lies in left subtree
-    if ( key < root->key )
-        root->left = deleteNode(root->left, key);
+    // If the size to be deleted is smaller than the
+    // root's size, then it lies in left subtree
+    if ( size < root->size )
+        root->left = deleteNode(root->left, size);
  
-    // If the key to be deleted is greater than the
-    // root's key, then it lies in right subtree
-    else if( key > root->key )
-        root->right = deleteNode(root->right, key);
+    // If the size to be deleted is greater than the
+    // root's size, then it lies in right subtree
+    else if( size > root->size )
+        root->right = deleteNode(root->right, size);
  
-    // if key is same as root's key, then This is
+    // if size is same as root's size, then This is
     // the node to be deleted
     else
     {
@@ -193,10 +206,10 @@ struct Node* deleteNode(struct Node* root, int key)
             struct Node* temp = minValueNode(root->right);
  
             // Copy the inorder successor's data to this node
-            root->key = temp->key;
+            root->size = temp->size;
  
             // Delete the inorder successor
-            root->right = deleteNode(root->right, temp->key);
+            root->right = deleteNode(root->right, temp->size);
         }
     }
  
