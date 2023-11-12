@@ -3,13 +3,7 @@
 #include<stdlib.h> 
 #include "avltree.h"
 // An AVL tree node 
-struct Node 
-{ 
-    int key; 
-    struct Node *left; 
-    struct Node *right; 
-    int height; 
-}; 
+
   
 // A utility function to get the height of the tree 
 int height(struct Node *N) 

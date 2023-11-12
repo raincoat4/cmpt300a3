@@ -1,6 +1,7 @@
 
 compile:
 	gcc -c avltree.c tree-test.c
+	gcc -o test avltree.o tree-test.o
 
 clean:
-	rm *.o *.exe all
+	rm *.o test

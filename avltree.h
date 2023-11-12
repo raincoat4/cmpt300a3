@@ -1,6 +1,6 @@
 #ifndef _AVLTREE_H_
 #define _AVLTREE_H_
-
+typedef struct Node Node;
 struct Node 
 { 
     int key; 
@@ -17,4 +17,5 @@ int getBalance(struct Node *N);
 struct Node* insert(struct Node* node, int key);
 struct Node * minValueNode(struct Node* node);
 struct Node* deleteNode(struct Node* root, int key);
+
 #endif
