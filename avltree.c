@@ -10,12 +10,16 @@ bool inUse(struct treeNode *N){
 
 int getEnd(struct treeNode *N)
 {
-    return (N->size)+(N->startPoint);
+
+    return (N->size)+*(N->start);
+
 }
 
 int getStart(struct treeNode *N)
 {
-    return N->startPoint;
+
+    return *(N->start);
+
 }
 
 int getSize(struct treeNode *N)
@@ -38,6 +42,7 @@ int max(int a, int b)
   
 /* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
+
 struct treeNode* newNode(int size) 
 { 
     struct treeNode* node = (struct treeNode*) 
@@ -45,6 +50,7 @@ struct treeNode* newNode(int size)
     node->size   = size; 
     node->left   = NULL; 
     node->right  = NULL; 
+    node->start  = start;
     node->height = 1;  // new node is initially added at leaf 
     return(node); 
 } 
@@ -101,16 +107,18 @@ int getBalance(struct treeNode *N)
   
 // Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
+
 struct treeNode* insert(struct treeNode* node, int size) 
 { 
+    
     /* 1.  Perform the normal BST insertion */
     if (node == NULL) 
-        return(newNode(size)); 
+        return(newNode(size,start)); 
   
     if (size < node->size) 
-        node->left  = insert(node->left, size); 
+        node->left  = insert(node->left, size,start); 
     else if (size > node->size) 
-        node->right = insert(node->right, size); 
+        node->right = insert(node->right, size,start); 
     else // Equal sizes are not allowed in BST 
         return node; 
   
@@ -254,4 +262,41 @@ struct treeNode* deleteNode(struct treeNode* root, int size)
     }
  
     return root;
+}
+// Function to find the best fit node for a specific job
+//return such node
+struct Node* bestFit(struct Node* root, int size){
+    struct Node* bfn=(root);
+    bfn=helperBF(root, size, bfn);
+    if(((bfn->size)-size)<0){
+        printf("%d\n", ((bfn->size)));
+        return NULL;
+    }{
+        return bfn;
+    }
+}
+
+void* helperBF(struct Node* root, int size,struct Node* bFn){
+    int bF=((bFn->size)-size);
+    int nF=((root->size)-size);
+    if(abs(nF)<abs(bF)){
+        bF=nF;
+        bFn=root;
+    }else{
+        return bFn;
+    }
+    if(bF<0){
+        //if difference is negative need more space so iterate right
+        if((root->right)){
+            return helperBF(root->right, size, bFn);
+        }else{
+            return NULL;
+        }
+    }
+    //if difference is positive get as close to 0 as possible
+    if((root->left)){
+        return helperBF(root->left, size,bFn);
+    }else{
+        return NULL;
+    }
 }

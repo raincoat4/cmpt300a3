@@ -4,4 +4,4 @@ test:
 	gcc -o test avltree.o tree-test.o
 
 clean:
-	rm *.o test
+	rm *.o test a.out
