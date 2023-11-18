@@ -1,25 +1,28 @@
 #ifndef _AVLTREE_H_
 #define _AVLTREE_H_
+#include <stdbool.h>
 typedef struct Node Node;
-struct Node 
+struct treeNode 
 { 
     int size; //size
-    int start;
-    struct Node *left; 
-    struct Node *right; 
-    int height; 
+    int startPoint;
+    //int endPoint;
+    struct treeNode *left; 
+    struct treeNode *right; 
+    int height;
+    bool inUse;
 }; 
-int getEnd(struct Node *N);
-int getStart(struct Node *N);
-int getSize(struct Node *N);
-int height(struct Node *N);
+int getEnd(struct treeNode *N);
+int getStart(struct treeNode *N);
+int getSize(struct treeNode *N);
+int height(struct treeNode *N);
 int max(int a, int b);
-struct Node* newNode(int size);
-struct Node *rightRotate(struct Node *y);
-struct Node *leftRotate(struct Node *x);
-int getBalance(struct Node *N);
-struct Node* insert(struct Node* node, int size);
-struct Node * minValueNode(struct Node* node);
-struct Node* deleteNode(struct Node* root, int size);
+struct treeNode* newNode(int size);
+struct treeNode *rightRotate(struct treeNode *y);
+struct treeNode *leftRotate(struct treeNode *x);
+int getBalance(struct treeNode *N);
+struct treeNode* insertTree(struct treeNode* node, int size);
+struct treeNode * minValueNode(struct treeNode* node);
+struct treeNode* deleteNode(struct treeNode* root, int size);
 
 #endif
