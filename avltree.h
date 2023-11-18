@@ -4,7 +4,7 @@ typedef struct Node Node;
 struct Node 
 { 
     int size; //size
-    int start;
+    int* start;
     struct Node *left; 
     struct Node *right; 
     int height; 
@@ -14,11 +14,11 @@ int getStart(struct Node *N);
 int getSize(struct Node *N);
 int height(struct Node *N);
 int max(int a, int b);
-struct Node* newNode(int size,int start);
+struct Node* newNode(int size,int* start);
 struct Node *rightRotate(struct Node *y);
 struct Node *leftRotate(struct Node *x);
 int getBalance(struct Node *N);
-struct Node* insert(struct Node* node, int size,int start);
+struct Node* insert(struct Node* node, int size,int* start);
 struct Node * minValueNode(struct Node* node);
 struct Node* deleteNode(struct Node* root, int size);
 struct Node* bestFit(struct Node* root, int size);

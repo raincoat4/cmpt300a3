@@ -6,12 +6,12 @@
 
 int getEnd(struct Node *N)
 {
-    return (N->size)+(N->start);
+    return (N->size)+*(N->start);
 }
 
 int getStart(struct Node *N)
 {
-    return N->start;
+    return *(N->start);
 }
 
 int getSize(struct Node *N)
@@ -34,7 +34,7 @@ int max(int a, int b)
   
 /* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
-struct Node* newNode(int size,int start) 
+struct Node* newNode(int size,int* start) 
 { 
     struct Node* node = (struct Node*) 
                         malloc(sizeof(struct Node)); 
@@ -98,8 +98,9 @@ int getBalance(struct Node *N)
   
 // Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
-struct Node* insert(struct Node* node, int size,int start) 
+struct Node* insert(struct Node* node, int size,int* start) 
 { 
+    
     /* 1.  Perform the normal BST insertion */
     if (node == NULL) 
         return(newNode(size,start)); 
@@ -256,8 +257,9 @@ struct Node* deleteNode(struct Node* root, int size)
 //return such node
 struct Node* bestFit(struct Node* root, int size){
     struct Node* bfn=(root);
-    helperBF(root, size, bfn);
+    bfn=helperBF(root, size, bfn);
     if(((bfn->size)-size)<0){
+        printf("%d\n", ((bfn->size)));
         return NULL;
     }{
         return bfn;
@@ -270,18 +272,20 @@ void* helperBF(struct Node* root, int size,struct Node* bFn){
     if(abs(nF)<abs(bF)){
         bF=nF;
         bFn=root;
+    }else{
+        return bFn;
     }
     if(bF<0){
         //if difference is negative need more space so iterate right
         if((root->right)){
-            helperBF(root->right, size, bFn);
+            return helperBF(root->right, size, bFn);
         }else{
             return NULL;
         }
     }
     //if difference is positive get as close to 0 as possible
     if((root->left)){
-        helperBF(root->left, size,bFn);
+        return helperBF(root->left, size,bFn);
     }else{
         return NULL;
     }
