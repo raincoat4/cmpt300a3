@@ -4,22 +4,30 @@
 #include "avltree.h"
 // An AVL tree node 
 
-int getEnd(struct Node *N)
-{
-    return (N->size)+(N->start);
+bool inUse(struct treeNode *N){
+    return inUse;
 }
 
-int getStart(struct Node *N)
+int getEnd(struct treeNode *N)
 {
-    return N->start;
+
+    return (N->size)+*(N->start);
+
 }
 
-int getSize(struct Node *N)
+int getStart(struct treeNode *N)
+{
+
+    return *(N->start);
+
+}
+
+int getSize(struct treeNode *N)
 {
     return N->size;
 }
 // A utility function to get the height of the tree 
-int height(struct Node *N) 
+int height(struct treeNode *N) 
 { 
     if (N == NULL) 
         return 0; 
@@ -34,23 +42,25 @@ int max(int a, int b)
   
 /* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
-struct Node* newNode(int size) 
+
+struct treeNode* newNode(int size, int* start) 
 { 
-    struct Node* node = (struct Node*) 
-                        malloc(sizeof(struct Node)); 
+    struct treeNode* node = (struct treeNode*) 
+                        malloc(sizeof(struct treeNode)); 
     node->size   = size; 
     node->left   = NULL; 
     node->right  = NULL; 
+    node->start  = start;
     node->height = 1;  // new node is initially added at leaf 
     return(node); 
 } 
   
 // A utility function to right rotate subtree rooted with y 
 // See the diagram given above. 
-struct Node *rightRotate(struct Node *y) 
+struct treeNode *rightRotate(struct treeNode *y) 
 { 
-    struct Node *x = y->left; 
-    struct Node *T2 = x->right; 
+    struct treeNode *x = y->left; 
+    struct treeNode *T2 = x->right; 
   
     // Perform rotation 
     x->right = y; 
@@ -68,10 +78,10 @@ struct Node *rightRotate(struct Node *y)
   
 // A utility function to left rotate subtree rooted with x 
 // See the diagram given above. 
-struct Node *leftRotate(struct Node *x) 
+struct treeNode *leftRotate(struct treeNode *x) 
 { 
-    struct Node *y = x->right; 
-    struct Node *T2 = y->left; 
+    struct treeNode *y = x->right; 
+    struct treeNode *T2 = y->left; 
   
     // Perform rotation 
     y->left = x; 
@@ -88,7 +98,7 @@ struct Node *leftRotate(struct Node *x)
 } 
   
 // Get Balance factor of node N 
-int getBalance(struct Node *N) 
+int getBalance(struct treeNode *N) 
 { 
     if (N == NULL) 
         return 0; 
@@ -97,16 +107,18 @@ int getBalance(struct Node *N)
   
 // Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
-struct Node* insert(struct Node* node, int size) 
+
+struct treeNode* insertTree(struct treeNode* node, int size,int* start) 
 { 
+    
     /* 1.  Perform the normal BST insertion */
     if (node == NULL) 
-        return(newNode(size)); 
+        return(newNode(size,start)); 
   
     if (size < node->size) 
-        node->left  = insert(node->left, size); 
+        node->left  = insertTree(node->left, size,start); 
     else if (size > node->size) 
-        node->right = insert(node->right, size); 
+        node->right = insertTree(node->right, size,start); 
     else // Equal sizes are not allowed in BST 
         return node; 
   
@@ -147,9 +159,9 @@ struct Node* insert(struct Node* node, int size)
     /* return the (unchanged) node pointer */
     return node; 
 } 
-struct Node * minValueNode(struct Node* node)
+struct treeNode * minValueNode(struct treeNode* node)
 {
-    struct Node* current = node;
+    struct treeNode* current = node;
  
     /* loop down to find the leftmost leaf */
     while (current->left != NULL)
@@ -161,7 +173,7 @@ struct Node * minValueNode(struct Node* node)
 // Recursive function to delete a node with given size
 // from subtree with given root. It returns root of
 // the modified subtree.
-struct Node* deleteNode(struct Node* root, int size)
+struct treeNode* deleteNode(struct treeNode* root, int size)
 {
     // STEP 1: PERFORM STANDARD BST DELETE
  
@@ -185,7 +197,7 @@ struct Node* deleteNode(struct Node* root, int size)
         // node with only one child or no child
         if( (root->left == NULL) || (root->right == NULL) )
         {
-            struct Node *temp = root->left ? root->left :
+            struct treeNode *temp = root->left ? root->left :
                                              root->right;
  
             // No child case
@@ -203,7 +215,7 @@ struct Node* deleteNode(struct Node* root, int size)
         {
             // node with two children: Get the inorder
             // successor (smallest in the right subtree)
-            struct Node* temp = minValueNode(root->right);
+            struct treeNode* temp = minValueNode(root->right);
  
             // Copy the inorder successor's data to this node
             root->size = temp->size;
@@ -250,4 +262,41 @@ struct Node* deleteNode(struct Node* root, int size)
     }
  
     return root;
+}
+// Function to find the best fit node for a specific job
+//return such node
+struct treeNode* bestFit(struct treeNode* root, int size){
+    struct treeNode* bfn=(root);
+    bfn=helperBF(root, size, bfn);
+    if(((bfn->size)-size)<0){
+        printf("%d\n", ((bfn->size)));
+        return NULL;
+    }{
+        return bfn;
+    }
+}
+
+void* helperBF(struct treeNode* root, int size,struct treeNode* bFn){
+    int bF=((bFn->size)-size);
+    int nF=((root->size)-size);
+    if(abs(nF)<abs(bF)){
+        bF=nF;
+        bFn=root;
+    }else{
+        return bFn;
+    }
+    if(bF<0){
+        //if difference is negative need more space so iterate right
+        if((root->right)){
+            return helperBF(root->right, size, bFn);
+        }else{
+            return NULL;
+        }
+    }
+    //if difference is positive get as close to 0 as possible
+    if((root->left)){
+        return helperBF(root->left, size,bFn);
+    }else{
+        return NULL;
+    }
 }

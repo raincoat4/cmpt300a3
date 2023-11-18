@@ -1,7 +1,6 @@
 
 test:
-	gcc -c avltree.c tree-test.c
-	gcc -o test avltree.o tree-test.o
-
+	gcc -c avltree.c hashmap.c main.c
+	gcc -o test avltree.o hashmap.o main.o
 clean:
 	rm *.o test
