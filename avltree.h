@@ -14,12 +14,14 @@ int getStart(struct Node *N);
 int getSize(struct Node *N);
 int height(struct Node *N);
 int max(int a, int b);
-struct Node* newNode(int size);
+struct Node* newNode(int size,int start);
 struct Node *rightRotate(struct Node *y);
 struct Node *leftRotate(struct Node *x);
 int getBalance(struct Node *N);
-struct Node* insert(struct Node* node, int size);
+struct Node* insert(struct Node* node, int size,int start);
 struct Node * minValueNode(struct Node* node);
 struct Node* deleteNode(struct Node* root, int size);
+struct Node* bestFit(struct Node* root, int size);
+void* helperBF(struct Node* root, int size,struct Node* bFn);
 
 #endif

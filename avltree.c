@@ -34,13 +34,14 @@ int max(int a, int b)
   
 /* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
-struct Node* newNode(int size) 
+struct Node* newNode(int size,int start) 
 { 
     struct Node* node = (struct Node*) 
                         malloc(sizeof(struct Node)); 
     node->size   = size; 
     node->left   = NULL; 
     node->right  = NULL; 
+    node->start  = start;
     node->height = 1;  // new node is initially added at leaf 
     return(node); 
 } 
@@ -97,16 +98,16 @@ int getBalance(struct Node *N)
   
 // Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
-struct Node* insert(struct Node* node, int size) 
+struct Node* insert(struct Node* node, int size,int start) 
 { 
     /* 1.  Perform the normal BST insertion */
     if (node == NULL) 
-        return(newNode(size)); 
+        return(newNode(size,start)); 
   
     if (size < node->size) 
-        node->left  = insert(node->left, size); 
+        node->left  = insert(node->left, size,start); 
     else if (size > node->size) 
-        node->right = insert(node->right, size); 
+        node->right = insert(node->right, size,start); 
     else // Equal sizes are not allowed in BST 
         return node; 
   
@@ -250,4 +251,38 @@ struct Node* deleteNode(struct Node* root, int size)
     }
  
     return root;
+}
+// Function to find the best fit node for a specific job
+//return such node
+struct Node* bestFit(struct Node* root, int size){
+    struct Node* bfn=(root);
+    helperBF(root, size, bfn);
+    if(((bfn->size)-size)<0){
+        return NULL;
+    }{
+        return bfn;
+    }
+}
+
+void* helperBF(struct Node* root, int size,struct Node* bFn){
+    int bF=((bFn->size)-size);
+    int nF=((root->size)-size);
+    if(abs(nF)<abs(bF)){
+        bF=nF;
+        bFn=root;
+    }
+    if(bF<0){
+        //if difference is negative need more space so iterate right
+        if((root->right)){
+            helperBF(root->right, size, bFn);
+        }else{
+            return NULL;
+        }
+    }
+    //if difference is positive get as close to 0 as possible
+    if((root->left)){
+        helperBF(root->left, size,bFn);
+    }else{
+        return NULL;
+    }
 }
