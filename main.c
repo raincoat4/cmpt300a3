@@ -38,6 +38,7 @@ void mem_init(size_t size){
 
     
 }
+//asdasd
 
 void *my_free(size_t size){
 
