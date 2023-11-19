@@ -5,7 +5,7 @@
 // An AVL tree node 
 
 bool inUse(struct treeNode *N){
-    return inUse;
+    return treeNode->inUse;
 }
 
 void* getEnd(struct treeNode *N)
