@@ -108,7 +108,6 @@ void* my_malloc(size_t size){
         return a;
     }
 }
-
 void preOrder(struct treeNode *root)
 {
     if(root != NULL)
