@@ -8,18 +8,14 @@ bool inUse(struct treeNode *N){
     return inUse;
 }
 
-int getEnd(struct treeNode *N)
+void* getEnd(struct treeNode *N)
 {
-
-    return (N->size)+*(N->start);
-
+    return N->start+(N->size);
 }
 
-int getStart(struct treeNode *N)
+void* getStart(struct treeNode *N)
 {
-
-    return *(N->start);
-
+    return (N->start);
 }
 
 int getSize(struct treeNode *N)
@@ -43,7 +39,7 @@ int max(int a, int b)
 /* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
 
-struct treeNode* newNode(int size, int* start) 
+struct treeNode* newNode(int size, void* start) 
 { 
     struct treeNode* node = (struct treeNode*) 
                         malloc(sizeof(struct treeNode)); 
@@ -108,7 +104,7 @@ int getBalance(struct treeNode *N)
 // Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
 
-struct treeNode* insertTree(struct treeNode* node, int size,int* start) 
+struct treeNode* insertTree(struct treeNode* node, int size,void* start) 
 { 
     bool cInsert=false;
     /* 1.  Perform the normal BST insertion */
@@ -177,7 +173,7 @@ struct treeNode * minValueNode(struct treeNode* node)
     return current;
 }
  
-struct treeNode* findNode(struct treeNode* root, int size, int* start){
+struct treeNode* findNode(struct treeNode* root, int size, void* start){
     if(root==NULL)
         return NULL;
 
@@ -186,7 +182,7 @@ struct treeNode* findNode(struct treeNode* root, int size, int* start){
     else if(size >root->size)
         root->right = findNode(root->right, size, start);
     else{
-        if(*start == *(root->start)){
+        if(start == (root->start)){
             return root;
         }else{
             if(!(root->count)){
@@ -194,7 +190,7 @@ struct treeNode* findNode(struct treeNode* root, int size, int* start){
             }
             while(root->count){
                 root=root->count;
-                if(*start==*(root->start)){
+                if(start==(root->start)){
                     return root;
                 }
             }
@@ -206,14 +202,14 @@ struct treeNode* findNode(struct treeNode* root, int size, int* start){
 // from subtree with given root. It returns root of
 // the modified subtree.
 
-struct treeNode* deleteCountNode(struct treeNode* root, int* start){
+struct treeNode* deleteCountNode(struct treeNode* root, void* start){
     struct treeNode* prev=NULL;
     struct treeNode* temp=root;
-    while(*(root->start)!=*start&&root->count){
+    while((root->start)!=start&&root->count){
         prev=root;
         root=root->count;
     }
-    if(*(root->start)!=*start){
+    if((root->start)!=start){
         printf("node not found\n");
         return false;
     }
@@ -236,7 +232,7 @@ struct treeNode* deleteCountNode(struct treeNode* root, int* start){
     
     
 }
-struct treeNode* deleteNode(struct treeNode* root, int size, int* start)
+struct treeNode* deleteNode(struct treeNode* root, int size, void* start)
 {
     // STEP 1: PERFORM STANDARD BST DELETE
  
