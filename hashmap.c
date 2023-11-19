@@ -50,28 +50,19 @@ int hashFunction(struct hashMap* mp, int* key)
 {
 	int bucketIndex;
 	int sum = 0, factor = 31;
-	//for (int i = 0; i < strlen(key); i++) {
-
-		// sum = sum + (ascii value of
-		// char * (primeNumber ^ x))...
-		// where x = 1, 2, 3....n
-		sum = ((sum % mp->capacity)
-			+ ((*key) * factor) % mp->capacity)
-			% mp->capacity;
-
-		// factor = factor * prime
-		// number....(prime
-		// number) ^ x
-		factor = ((factor % __INT16_MAX__)
-				* (31 % __INT16_MAX__))
-				% __INT16_MAX__;
-	//}
-
+	printf("hi\n");
+	printf("%i", mp->capacity);
+	sum = ((sum % mp->capacity)
+		+ ((*key) * factor) % mp->capacity)
+		% mp->capacity;
+	factor = ((factor % __INT16_MAX__)
+			* (31 % __INT16_MAX__))
+			% __INT16_MAX__;
 	bucketIndex = sum;
 	return bucketIndex;
 }
 
-void insert(struct hashMap* mp, int* key, void* value)
+void insertMap(struct hashMap* mp, int* key, void* value)
 {
 
 	// Getting bucket index for the given
@@ -142,11 +133,15 @@ void* search(struct hashMap* mp, int* key)
 
 	// Getting the bucket index
 	// for the given key
+	//printf("%i\n", *key);
+	printf("hi\n");
 	int bucketIndex = hashFunction(mp, key);
-
+	printf("hi\n");
+	//printf("%i\n", bucketIndex);
 	// Head of the linked list
 	// present at bucket index
 	struct mapNode* bucketHead = mp->arr[bucketIndex];
+	//printf("hi\n");
 	while (bucketHead != NULL) {
 
 		// Key is found in the hashMap
@@ -161,42 +156,3 @@ void* search(struct hashMap* mp, int* key)
 	
 	return NULL;
 }
-
-// Drivers code
-/*
-int main()
-{
-
-	// Initialize the value of mp
-	struct hashMap* mp
-		= (struct hashMap*)malloc(sizeof(struct hashMap));
-	initializeHashMap(mp);
-
-	int a = 1;
-	int* a2 = &a;
-	int b = 2;
-	int* b2 = &b;
-	int c = 3;
-	int* c2 = &c;
-	int d = 4;
-	int* d2 = &d;
-	insert(mp, a2, "Anjali");
-	insert(mp, b2, "Vartika");
-	insert(mp, c2, "Manish");
-
-	printf("%s\n", search(mp, a2));
-	printf("%s\n", search(mp, b2));
-	printf("%s\n", search(mp, c2));
-
-	// Key is not inserted
-	printf("%s\n", search(mp, d2));
-
-	printf("\nAfter deletion : \n");
-
-	// Deletion of key
-	delete(mp, b2);
-	printf("%s\n", search(mp, b2));
-
-	return 0;
-}
-*/

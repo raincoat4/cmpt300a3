@@ -180,7 +180,7 @@ struct treeNode* findNode(struct treeNode* root, int size, void* start){
         else if(size >root->size)
             root->right = findNode(root->right, size, start);
         else{
-            if((int)start == (int)(root->start)){
+            if(VOIP2INT(start) == VOIP2INT(root->start)){
                 return root;
             }else{
                 if(!(root->count)){

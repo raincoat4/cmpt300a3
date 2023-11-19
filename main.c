@@ -17,6 +17,7 @@ struct hashMap *startMap;
 struct hashMap *endMap;
 struct treeNode *free_root;
 
+
 void mem_init(size_t size){
     //initialize memory block
     free_root=NULL;
@@ -43,8 +44,7 @@ void mem_init(size_t size){
 //asdasd
 
 void my_free(void *ptr){
-    
-    int tmp = (int)(ptr-largeBlock);
+    int* tmp = (int)(ptr-largeBlock);
     int* thisStartPoint = &tmp;
     //printf("%i\n", *tmp);
     struct treeNode* memToFree = search(startMap, thisStartPoint);
@@ -54,7 +54,7 @@ void my_free(void *ptr){
         return;
     }
     //this is startpoint of the node we want to free
-    int tmp2 = *(memToFree->start) + memToFree->size + 1;
+    int tmp2 = (intptr_t)(memToFree->start) + memToFree->size + 1;
     int* nextStartPoint = &tmp2;
     //might need to assign to void ptr first
     struct treeNode* nodeInFront = search(startMap, nextStartPoint);
@@ -98,7 +98,14 @@ void* my_malloc(size_t size){
         
         a=a+(int)size;
         free_root=insertTree(free_root,largeBlockSize-size, a);
-        
+
+        struct treeNode* busyJob = newNode(size, largeBlock);
+        struct treeNode* freeSpace=findNode(free_root, largeBlockSize-size, a);
+        insertMap(startMap, largeBlock, busyJob);
+        insertMap(endMap, largeBlock-1, busyJob);
+        insertMap(startMap, a, freeSpace);
+        insertMap(endMap, a+size, freeSpace);
+
         return largeBlock;
     }
     struct treeNode* ret = bestFit(free_root, size);
@@ -114,9 +121,14 @@ void* my_malloc(size_t size){
         
         free_root=insertTree(free_root, (ret->size)-size, b);
         deleteNode(free_root, ret->size,a);
-        findNode(free_root, size, a);
-        //insertMap(startMap, a, free_root);
-        //insertMap(endMap, b, free_root);
+        
+        //adding free nodes
+        struct treeNode* busyJob = newNode(size, a);
+        struct treeNode* freeSpace=findNode(free_root, (ret->size)-size, b);
+        insertMap(startMap, a, busyJob);
+        insertMap(endMap, b-1, busyJob);
+        insertMap(startMap, b, freeSpace);
+        insertMap(endMap, b+(ret->size)-size, freeSpace);
         return a;
     }
 }

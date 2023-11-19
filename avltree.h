@@ -1,6 +1,7 @@
 #ifndef _AVLTREE_H_
 #define _AVLTREE_H_
 #include <stdbool.h>
+#define VOIP2INT(i) (long)(i)
 typedef struct Node Node;
 struct treeNode 
 { 
