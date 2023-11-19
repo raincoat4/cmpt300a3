@@ -82,10 +82,10 @@ void* my_malloc(size_t size){
             perror("Not enough memory");
             exit(EXIT_FAILURE);
         }
-        int* a;
+        void* a;
         a=largeBlock;
         
-        a=a+(int)size;
+        a=a+(int)size+1;
         free_root=insertTree(free_root,largeBlockSize-size, a);
         
         return largeBlock;
@@ -96,10 +96,10 @@ void* my_malloc(size_t size){
         exit(EXIT_FAILURE);
         return NULL;
     }else{
-        int* a;
+        void* a;
         a=ret->start;
-        int* b;
-        b=a+size;
+        void* b;
+        b=a+(int)size+1;
         
         free_root=insertTree(free_root, (ret->size)-size, b);
         deleteNode(free_root, ret->size,a);
@@ -108,6 +108,7 @@ void* my_malloc(size_t size){
         return a;
     }
 }
+
 void preOrder(struct treeNode *root)
 {
     if(root != NULL)
@@ -121,20 +122,20 @@ void preOrder(struct treeNode *root)
 
 int main(){
     mem_init(100);
-    int* p = my_malloc(25);
+    void* p = my_malloc(25);
     preOrder(free_root);
     printf("\n");
-    int* n=my_malloc(25);
+    void* n=my_malloc(25);
     printf("%p\n", p);
     
-    printf("%p\n", p+25);
+    printf("%p\n", p+25+1);
     printf("%p\n", n);
     preOrder(free_root);
     printf("\n");
-    int* m=my_malloc(30);
+    void* m=my_malloc(30);
     
     printf("%p\n", m);
-    printf("%p\n", p+70);
+    printf("%p\n", p+70+2);
     preOrder(free_root);
     printf("\n");
 }
