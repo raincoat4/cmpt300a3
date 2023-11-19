@@ -44,7 +44,7 @@ void mem_init(size_t size){
 //asdasd
 
 void my_free(void *ptr){
-    int* tmp = (int)(ptr-largeBlock);
+    int tmp = (int)(ptr-largeBlock);
     int* thisStartPoint = &tmp;
     //printf("%i\n", *tmp);
     struct treeNode* memToFree = search(startMap, thisStartPoint);
