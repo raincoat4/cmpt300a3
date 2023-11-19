@@ -9,16 +9,12 @@ bool inUse(struct treeNode *N){
 }
 
 void* getEnd(struct treeNode *N)
-void* getEnd(struct treeNode *N)
 {
-    return N->start+(N->size);
     return N->start+(N->size);
 }
 
 void* getStart(struct treeNode *N)
-void* getStart(struct treeNode *N)
 {
-    return (N->start);
     return (N->start);
 }
 
@@ -43,7 +39,6 @@ int max(int a, int b)
 /* Helper function that allocates a new node with the given size and 
     NULL left and right pointers. */
 
-struct treeNode* newNode(int size, void* start) 
 struct treeNode* newNode(int size, void* start) 
 { 
     struct treeNode* node = (struct treeNode*) 
@@ -109,7 +104,6 @@ int getBalance(struct treeNode *N)
 // Recursive function to insert a size in the subtree rooted 
 // with node and returns the new root of the subtree. 
 
-struct treeNode* insertTree(struct treeNode* node, int size,void* start) 
 struct treeNode* insertTree(struct treeNode* node, int size,void* start) 
 { 
     bool cInsert=false;
@@ -198,39 +192,15 @@ struct treeNode* findNode(struct treeNode* root, int size, void* start){
                     if(start==(root->start)){
                         return root;
                     }
-struct treeNode* findNode(struct treeNode* root, int size, void* start){
-    if(root){
-        if(size<root->size)
-            root->left = findNode(root->left, size, start);
-        else if(size >root->size)
-            root->right = findNode(root->right, size, start);
-        else{
-            if((int)start == (int)(root->start)){
-                return root;
-            }else{
-                if(!(root->count)){
-                    
-                    return NULL;
                 }
-                while(root->count){
-                    root=root->count;
-                    if(start==(root->start)){
-                        return root;
-                    }
-                }
-                
                 
             }
         }
         printf("asd\n");
         return NULL;
-        printf("asd\n");
-        return NULL;
     }
     return NULL;
-}
-
-// Recursive function to delete a node with given size
+}// Recursive function to delete a node with given size
 // from subtree with given root. It returns root of
 // the modified subtree.
 

@@ -22,6 +22,7 @@ void mem_init(size_t size){
     free_root=NULL;
     largeBlock = (void*)malloc(size);
     largeBlockSize=size;
+    free_root = insertTree(free_root, largeBlockSize, largeBlock);
     if(largeBlock == NULL){
         perror("Memory allocation failed");
         exit(EXIT_FAILURE);
@@ -29,22 +30,32 @@ void mem_init(size_t size){
 
 
     //initialize startpoint hashmap
-    struct hashMap* startMap = (struct hashMap*)malloc(sizeof(struct hashMap));
+    printf("%lu\n", sizeof(struct hashMap));
+    startMap = (struct hashMap*)malloc(sizeof(struct hashMap));
 	initializeHashMap(startMap);
 
     //initialize endpoint hashmap
-    struct hashMap* endMap = (struct hashMap*)malloc(sizeof(struct hashMap));
+    endMap = (struct hashMap*)malloc(sizeof(struct hashMap));
 	initializeHashMap(endMap);
 
     
 }
 //asdasd
 
-void *my_free(void *ptr){
-    struct treeNode* memToFree = ptr;
+void my_free(void *ptr){
+    
+    int tmp = (int)(ptr-largeBlock);
+    int* thisStartPoint = &tmp;
+    //printf("%i\n", *tmp);
+    struct treeNode* memToFree = search(startMap, thisStartPoint);
+    printf("made it out of search\n");
+    if(!memToFree){
+        printf("this should be impossible\n");
+        return;
+    }
     //this is startpoint of the node we want to free
-    int* thisStartPoint = memToFree->startPoint;
-    int* nextStartPoint = memToFree->startPoint + memToFree->size + 1;
+    int tmp2 = *(memToFree->start) + memToFree->size + 1;
+    int* nextStartPoint = &tmp2;
     //might need to assign to void ptr first
     struct treeNode* nodeInFront = search(startMap, nextStartPoint);
     //nodeInFront is never NULL since the hashmap always has nodes wheher the space is being used or not
@@ -61,9 +72,9 @@ void *my_free(void *ptr){
         //delete from hashmap first because the tree is gonna free the memory
         delete(startMap, nextStartPoint);
         //might be size - 1 idk
-        int* nextEndPoint = *nextStartPoint + nodeInFront->size;
+        int* nextEndPoint = *nextStartPoint + &nodeInFront->size;
         delete(endMap, nextEndPoint);
-        free_root = deleteNode(free_root, nodeInFront->size);    
+        free_root = deleteNode(free_root, nodeInFront->size, nodeInFront->start);    
     }
     else{
         //if nodeInFront is being used then just add the node to free to the tree
@@ -71,7 +82,7 @@ void *my_free(void *ptr){
     }
     free_root = insertTree(free_root, sizeOfNode, thisStartPoint);
 }
-
+    
 
 void* my_malloc(size_t size){
     
@@ -85,9 +96,9 @@ void* my_malloc(size_t size){
         void* a;
         a=largeBlock;
         
-        a=a+(int)size+1;
+        a=a+(int)size;
         free_root=insertTree(free_root,largeBlockSize-size, a);
-
+        
         return largeBlock;
     }
     struct treeNode* ret = bestFit(free_root, size);
@@ -97,25 +108,21 @@ void* my_malloc(size_t size){
         return NULL;
     }else{
         void* a;
-        void* a;
         a=ret->start;
         void* b;
         b=a+(int)size;
         
         free_root=insertTree(free_root, (ret->size)-size, b);
-        free_root = deleteNode(free_root, ret->size,a);
-
-
+        deleteNode(free_root, ret->size,a);
+        findNode(free_root, size, a);
         //insertMap(startMap, a, free_root);
         //insertMap(endMap, b, free_root);
         return a;
     }
 }
-
-
 void preOrder(struct treeNode *root)
 {
-    if(root)
+    if(root != NULL)
     {
         printf("%d ", root->size);
         preOrder(root->left);
@@ -127,27 +134,23 @@ void preOrder(struct treeNode *root)
 int main(){
     mem_init(100);
     void* p = my_malloc(25);
-    void* p = my_malloc(25);
     preOrder(free_root);
     printf("\n");
-    void* n=my_malloc(25);
     void* n=my_malloc(25);
     printf("%p\n", p);
     
-    printf("%p\n", p+25+1);
+    printf("%p\n", p+25);
     printf("%p\n", n);
     preOrder(free_root);
     printf("\n");
-    void* m=my_malloc(30);
+    void* k=my_malloc(30);
     
-    void* kk = findNode(free_root, 20, m+30);
-    printf("kk: %p\n", kk);
-    
-    preOrder(free_root);
-     printf("\n");
-
-    printf("%p\n", m);
+    printf("%p\n", k);
     printf("%p\n", p+50);
-    
-   
+    preOrder(free_root);
+    printf("\n");
+    //int* ptrlb = largeBlock;
+    my_free(n);
+    preOrder(free_root);
+    printf("\n");
 }
