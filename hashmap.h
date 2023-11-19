@@ -25,6 +25,6 @@ void initializeHashMap(struct hashMap* mp);
 int hashFunction(struct hashMap* mp, int* key);
 void insertMap(struct hashMap* mp, int* key, void* value);
 void delete (struct hashMap* mp, int* key);
-char* search(struct hashMap* mp, int* key);
+void* search(struct hashMap* mp, int* key);
 
 #endif

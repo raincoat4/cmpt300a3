@@ -50,28 +50,19 @@ int hashFunction(struct hashMap* mp, int* key)
 {
 	int bucketIndex;
 	int sum = 0, factor = 31;
-	//for (int i = 0; i < strlen(key); i++) {
-
-		// sum = sum + (ascii value of
-		// char * (primeNumber ^ x))...
-		// where x = 1, 2, 3....n
-		sum = ((sum % mp->capacity)
-			+ ((*key) * factor) % mp->capacity)
-			% mp->capacity;
-
-		// factor = factor * prime
-		// number....(prime
-		// number) ^ x
-		factor = ((factor % __INT16_MAX__)
-				* (31 % __INT16_MAX__))
-				% __INT16_MAX__;
-	//}
-
+	printf("hi\n");
+	printf("%i", mp->capacity);
+	sum = ((sum % mp->capacity)
+		+ ((*key) * factor) % mp->capacity)
+		% mp->capacity;
+	factor = ((factor % __INT16_MAX__)
+			* (31 % __INT16_MAX__))
+			% __INT16_MAX__;
 	bucketIndex = sum;
 	return bucketIndex;
 }
 
-void insert(struct hashMap* mp, int* key, void* value)
+void insertMap(struct hashMap* mp, int* key, void* value)
 {
 
 	// Getting bucket index for the given
@@ -128,7 +119,7 @@ void delete (struct hashMap* mp, int* key)
 			else {
 				prevNode->next = currNode->next;
 			}
-			free(currNode);
+			//free(currNode);
 			break;
 		}
 		prevNode = currNode;
@@ -137,16 +128,20 @@ void delete (struct hashMap* mp, int* key)
 	return;
 }
 
-char* search(struct hashMap* mp, int* key)
+void* search(struct hashMap* mp, int* key)
 {
 
 	// Getting the bucket index
 	// for the given key
+	//printf("%i\n", *key);
+	printf("hi\n");
 	int bucketIndex = hashFunction(mp, key);
-
+	printf("hi\n");
+	//printf("%i\n", bucketIndex);
 	// Head of the linked list
 	// present at bucket index
 	struct mapNode* bucketHead = mp->arr[bucketIndex];
+	//printf("hi\n");
 	while (bucketHead != NULL) {
 
 		// Key is found in the hashMap
@@ -158,12 +153,13 @@ char* search(struct hashMap* mp, int* key)
 
 	// If no key found in the hashMap
 	// equal to the given key
-	char* errorMssg = (char*)malloc(sizeof(char) * 25);
-	errorMssg = "Oops! No data found.\n";
-	return errorMssg;
+	
+	return NULL;
 }
 
 // Drivers code
+
+/*
 int main()
 {
 
@@ -171,7 +167,6 @@ int main()
 	struct hashMap* mp
 		= (struct hashMap*)malloc(sizeof(struct hashMap));
 	initializeHashMap(mp);
-
 	int a = 1;
 	int* a2 = &a;
 	int b = 2;
@@ -183,19 +178,29 @@ int main()
 	insert(mp, a2, "Anjali");
 	insert(mp, b2, "Vartika");
 	insert(mp, c2, "Manish");
-
-	printf("%s\n", search(mp, a2));
-	printf("%s\n", search(mp, b2));
-	printf("%s\n", search(mp, c2));
+	void* ptr1 = search(mp, a2);
+	void* ptr2 = search(mp, b2);
+	void* ptr3 = search(mp, c2);
+	char* str1 = ptr1;
+	char* str2 = ptr2;
+	char* str3 = ptr3;
+	printf("%s\n", str1);
+	printf("%s\n", str2);
+	printf("%s\n", str3);
 
 	// Key is not inserted
-	printf("%s\n", search(mp, d2));
+	void* ptr4 = search(mp, d2);
+	char* str4 = ptr4;
+	printf("%s\n", str4);
 
 	printf("\nAfter deletion : \n");
 
 	// Deletion of key
 	delete(mp, b2);
-	printf("%s\n", search(mp, b2));
+	ptr2 = search(mp, b2);
+	str2 = ptr2;
+	printf("%s\n", str2);
 
 	return 0;
 }
+*/
