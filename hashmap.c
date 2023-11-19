@@ -128,7 +128,7 @@ void delete (struct hashMap* mp, int* key)
 			else {
 				prevNode->next = currNode->next;
 			}
-			free(currNode);
+			//free(currNode);
 			break;
 		}
 		prevNode = currNode;
@@ -137,7 +137,7 @@ void delete (struct hashMap* mp, int* key)
 	return;
 }
 
-char* search(struct hashMap* mp, int* key)
+void* search(struct hashMap* mp, int* key)
 {
 
 	// Getting the bucket index
@@ -158,9 +158,8 @@ char* search(struct hashMap* mp, int* key)
 
 	// If no key found in the hashMap
 	// equal to the given key
-	char* errorMssg = (char*)malloc(sizeof(char) * 25);
-	errorMssg = "Oops! No data found.\n";
-	return errorMssg;
+	
+	return NULL;
 }
 
 // Drivers code

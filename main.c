@@ -40,8 +40,36 @@ void mem_init(size_t size){
 }
 //asdasd
 
-void *my_free(size_t size){
-
+void *my_free(void *ptr){
+    struct treeNode* memToFree = ptr;
+    //this is startpoint of the node we want to free
+    int* thisStartPoint = memToFree->startPoint;
+    int* nextStartPoint = memToFree->startPoint + memToFree->size + 1;
+    //might need to assign to void ptr first
+    struct treeNode* nodeInFront = search(startMap, nextStartPoint);
+    //nodeInFront is never NULL since the hashmap always has nodes wheher the space is being used or not
+    if(!nodeInFront){
+        printf("node in front is null");
+        return;
+    }
+    //this will either be just the size of the node we wanna free or the size of the node we wanna free + node in front
+    int sizeOfNode;
+    //if nodeInFront is free memory
+    if(!(nodeInFront->inUse)){
+        sizeOfNode = memToFree->size + nodeInFront->size;
+        //remove the node in front from all structures because its gonna combine with the one we are pointing to
+        //delete from hashmap first because the tree is gonna free the memory
+        delete(startMap, nextStartPoint);
+        //might be size - 1 idk
+        int* nextEndPoint = *nextStartPoint + nodeInFront->size;
+        delete(endMap, nextEndPoint);
+        free_root = deleteNode(free_root, nodeInFront->size);    
+    }
+    else{
+        //if nodeInFront is being used then just add the node to free to the tree
+        sizeOfNode = memToFree->size;
+    }
+    free_root = insertTree(free_root, sizeOfNode, thisStartPoint);
 }
     
 
