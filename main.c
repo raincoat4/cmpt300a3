@@ -102,9 +102,9 @@ void* my_malloc(size_t size){
         struct treeNode* busyJob = newNode(size, largeBlock);
         struct treeNode* freeSpace=findNode(free_root, largeBlockSize-size, a);
         insertMap(startMap, largeBlock, busyJob);
-        insertMap(endMap, largeBlock-1, busyJob);
-        insertMap(startMap, a, freeSpace);
-        insertMap(endMap, a+size, freeSpace);
+        insertMap(endMap, largeBlock, busyJob);
+        insertMap(startMap, largeBlockSize-size, freeSpace);
+        insertMap(endMap, largeBlockSize-size, freeSpace);
 
         return largeBlock;
     }
@@ -125,10 +125,10 @@ void* my_malloc(size_t size){
         //adding free nodes
         struct treeNode* busyJob = newNode(size, a);
         struct treeNode* freeSpace=findNode(free_root, (ret->size)-size, b);
-        insertMap(startMap, a, busyJob);
-        insertMap(endMap, b-1, busyJob);
-        insertMap(startMap, b, freeSpace);
-        insertMap(endMap, b+(ret->size)-size, freeSpace);
+        insertMap(startMap, largeBlock, busyJob);
+        insertMap(endMap, size-1, busyJob);
+        insertMap(startMap, size, freeSpace);
+        insertMap(endMap, size, freeSpace);
         return a;
     }
 }
