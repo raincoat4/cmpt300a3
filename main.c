@@ -102,10 +102,9 @@ void* my_malloc(size_t size){
         b=a+size;
         
         free_root=insertTree(free_root, (ret->size)-size, b);
-        deleteNode(free_root, ret->size);
-        
-       
-        
+        deleteNode(free_root, ret->size,a);
+        //insertMap(startMap, a, free_root);
+        //insertMap(endMap, b, free_root);
         return a;
     }
 }
@@ -122,16 +121,18 @@ void preOrder(struct treeNode *root)
 
 int main(){
     mem_init(100);
-    int* p = my_malloc(50);
-    int* n=my_malloc(20);
+    int* p = my_malloc(25);
+    preOrder(free_root);
+    printf("\n");
+    int* n=my_malloc(25);
     printf("%p\n", p);
     
-    printf("%p\n", p+50);
+    printf("%p\n", p+25);
     printf("%p\n", n);
     preOrder(free_root);
     printf("\n");
     int* m=my_malloc(30);
-   
+    
     printf("%p\n", m);
     printf("%p\n", p+70);
     preOrder(free_root);
