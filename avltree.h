@@ -10,6 +10,7 @@ struct treeNode
     //int endPoint;
     struct treeNode *left; 
     struct treeNode *right; 
+    struct treeNode *count;
     int* start;
     int height;
     bool inUse;
@@ -26,7 +27,9 @@ struct treeNode *leftRotate(struct treeNode *x);
 int getBalance(struct treeNode *N);
 struct treeNode* insertTree(struct treeNode* node, int size,int* start);
 struct treeNode * minValueNode(struct treeNode* node);
-struct treeNode* deleteNode(struct treeNode* root, int size);
+struct treeNode* deleteCountNode(struct treeNode* root, int* start);
+struct treeNode* deleteNode(struct treeNode* root, int size, int* start);
+struct treeNode* findNode(struct treeNode* root, int size, int* start);
 struct treeNode* bestFit(struct treeNode* root, int size);
 void* helperBF(struct treeNode* root, int size,struct treeNode* bFn);
 

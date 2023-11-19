@@ -54,7 +54,7 @@ struct treeNode* newNode(int size, int* start)
     node->height = 1;  // new node is initially added at leaf 
     return(node); 
 } 
-  
+
 // A utility function to right rotate subtree rooted with y 
 // See the diagram given above. 
 struct treeNode *rightRotate(struct treeNode *y) 
@@ -75,7 +75,7 @@ struct treeNode *rightRotate(struct treeNode *y)
     // Return new root 
     return x; 
 } 
-  
+
 // A utility function to left rotate subtree rooted with x 
 // See the diagram given above. 
 struct treeNode *leftRotate(struct treeNode *x) 
@@ -110,7 +110,7 @@ int getBalance(struct treeNode *N)
 
 struct treeNode* insertTree(struct treeNode* node, int size,int* start) 
 { 
-    
+    bool cInsert=false;
     /* 1.  Perform the normal BST insertion */
     if (node == NULL) 
         return(newNode(size,start)); 
@@ -119,12 +119,19 @@ struct treeNode* insertTree(struct treeNode* node, int size,int* start)
         node->left  = insertTree(node->left, size,start); 
     else if (size > node->size) 
         node->right = insertTree(node->right, size,start); 
-    else // Equal sizes are not allowed in BST 
-        return node; 
-  
+    else{ // Equal sizes will be placed in a liked list
+        while(node->count){
+            node=node->count;
+        }
+        node->count=newNode(size,start);
+        cInsert=true;
+    }
     /* 2. Update height of this ancestor node */
-    node->height = 1 + max(height(node->left), 
+    if(!cInsert){
+        node->height = 1 + max(height(node->left), 
                         height(node->right)); 
+    }
+    
   
     /* 3. Get the balance factor of this ancestor 
           node to check whether this node became 
@@ -170,10 +177,66 @@ struct treeNode * minValueNode(struct treeNode* node)
     return current;
 }
  
+struct treeNode* findNode(struct treeNode* root, int size, int* start){
+    if(root==NULL)
+        return NULL;
+
+    if(size<root->size)
+        root->left = findNode(root->left, size, start);
+    else if(size >root->size)
+        root->right = findNode(root->right, size, start);
+    else{
+        if(*start == *(root->start)){
+            return root;
+        }else{
+            if(!(root->count)){
+                return NULL;
+            }
+            while(root->count){
+                root=root->count;
+                if(*start==*(root->start)){
+                    return root;
+                }
+            }
+            return NULL;
+        }
+    }
+}
 // Recursive function to delete a node with given size
 // from subtree with given root. It returns root of
 // the modified subtree.
-struct treeNode* deleteNode(struct treeNode* root, int size)
+
+struct treeNode* deleteCountNode(struct treeNode* root, int* start){
+    struct treeNode* prev=NULL;
+    struct treeNode* temp=root;
+    while(*(root->start)!=*start&&root->count){
+        prev=root;
+        root=root->count;
+    }
+    if(*(root->start)!=*start){
+        printf("node not found\n");
+        return false;
+    }
+    //if the root is at the end of the count free it
+    if(!(root->count)){
+        free(root);
+        return temp;
+    }
+    else{
+        //middle case and start case
+        if(prev){
+            prev->count=root->count;
+        }else{
+            prev=root->count;
+        }
+        free(root);
+    }
+    
+    return prev;
+    
+    
+}
+struct treeNode* deleteNode(struct treeNode* root, int size, int* start)
 {
     // STEP 1: PERFORM STANDARD BST DELETE
  
@@ -183,17 +246,21 @@ struct treeNode* deleteNode(struct treeNode* root, int size)
     // If the size to be deleted is smaller than the
     // root's size, then it lies in left subtree
     if ( size < root->size )
-        root->left = deleteNode(root->left, size);
+        root->left = deleteNode(root->left, size, start);
  
     // If the size to be deleted is greater than the
     // root's size, then it lies in right subtree
     else if( size > root->size )
-        root->right = deleteNode(root->right, size);
+        root->right = deleteNode(root->right, size, start);
  
     // if size is same as root's size, then This is
     // the node to be deleted
     else
     {
+        //if a count root exists then use deletecountnode to delete node
+        if((root->count)){
+            root=deleteCountNode(root,start);
+        }
         // node with only one child or no child
         if( (root->left == NULL) || (root->right == NULL) )
         {
@@ -221,17 +288,19 @@ struct treeNode* deleteNode(struct treeNode* root, int size)
             root->size = temp->size;
  
             // Delete the inorder successor
-            root->right = deleteNode(root->right, temp->size);
+            root->right = deleteNode(root->right, temp->size, start);
         }
     }
  
     // If the tree had only one node then return
     if (root == NULL)
       return root;
- 
-    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+    
     root->height = 1 + max(height(root->left),
-                           height(root->right));
+                       height(root->right));
+    
+    // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
+    
  
     // STEP 3: GET THE BALANCE FACTOR OF THIS NODE (to
     // check whether this node became unbalanced)
