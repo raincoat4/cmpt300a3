@@ -41,25 +41,26 @@ void mem_init(size_t size){
 //asdasd
 
 void *my_free(size_t size){
-
+    size=size;
+    return NULL;
 }
-    
+
 
 void* my_malloc(size_t size){
     
     if(!free_root){
         //if the tree is empty get the block of memory
         //largeBlock ptr will be start of the memory endpoint will be ptr+size
-        if(size>largeBlockSize){
+        if((int)size>largeBlockSize){
             perror("Not enough memory");
             exit(EXIT_FAILURE);
         }
-        int* a;
+        void* a;
         a=largeBlock;
         
         a=a+(int)size;
         free_root=insertTree(free_root,largeBlockSize-size, a);
-        
+
         return largeBlock;
     }
     struct treeNode* ret = bestFit(free_root, size);
@@ -68,21 +69,25 @@ void* my_malloc(size_t size){
         exit(EXIT_FAILURE);
         return NULL;
     }else{
-        int* a;
+        void* a;
         a=ret->start;
-        int* b;
-        b=a+size;
+        void* b;
+        b=a+(int)size;
         
         free_root=insertTree(free_root, (ret->size)-size, b);
-        deleteNode(free_root, ret->size,a);
+        free_root = deleteNode(free_root, ret->size,a);
+
+
         //insertMap(startMap, a, free_root);
         //insertMap(endMap, b, free_root);
         return a;
     }
 }
+
+
 void preOrder(struct treeNode *root)
 {
-    if(root != NULL)
+    if(root)
     {
         printf("%d ", root->size);
         preOrder(root->left);
@@ -93,20 +98,26 @@ void preOrder(struct treeNode *root)
 
 int main(){
     mem_init(100);
-    int* p = my_malloc(25);
+    void* p = my_malloc(25);
     preOrder(free_root);
     printf("\n");
-    int* n=my_malloc(25);
+    void* n=my_malloc(25);
     printf("%p\n", p);
     
     printf("%p\n", p+25);
     printf("%p\n", n);
     preOrder(free_root);
     printf("\n");
-    int* m=my_malloc(30);
+    void* m=my_malloc(30);
     
-    printf("%p\n", m);
-    printf("%p\n", p+70);
+    void* kk = findNode(free_root, 20, m+30);
+    printf("kk: %p\n", kk);
+    
     preOrder(free_root);
-    printf("\n");
+     printf("\n");
+
+    printf("%p\n", m);
+    printf("%p\n", p+50);
+    
+   
 }
